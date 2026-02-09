@@ -56,26 +56,49 @@ class _S extends State<App> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        backgroundColor: Colors.black,
         body: SafeArea(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const SizedBox(height: 24),
               const Padding(
                 padding: EdgeInsets.all(16),
-                child: Text(
-                  'Selecione o dispositivo',
-                  style: TextStyle(fontSize: 22),
+                child: Center(
+                  child: Text(
+                    'Select a device',
+                    style: TextStyle(fontSize: 22, color: Colors.white),
+                  ),
                 ),
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: devices.length,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: devices.length + 1,
                   itemBuilder: (_, i) {
+                    if (i == devices.length) {
+                      return const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        child: Center(
+                          child: SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                        ),
+                      );
+                    }
+
                     final d = devices[i];
-                    final name = d.name.isEmpty ? '(sem nome)' : d.name;
-                    return ListTile(
-                      title: Text(name),
-                      subtitle: Text(d.id),
+                    final name = d.name.trim();
+                    return Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 420),
+                        child: ListTile(
+                          title: Text(name, style: const TextStyle(color: Colors.white)),
+                          subtitle: Text(d.id, style: const TextStyle(color: Colors.white70)),
+                        ),
+                      ),
                     );
                   },
                 ),
