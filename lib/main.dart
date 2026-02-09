@@ -66,8 +66,8 @@ class _S extends State<App> {
                 padding: EdgeInsets.all(16),
                 child: Center(
                   child: Text(
-                    'Select a device',
-                    style: TextStyle(fontSize: 22, color: Colors.white),
+                    'Select a heart rate monitor',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
               ),
@@ -123,11 +123,11 @@ class _S extends State<App> {
                             child: ListTile(
                               title: Text(
                                 name,
-                                style: const TextStyle(color: Colors.white),
+                                style: const TextStyle(color: Colors.white, fontSize: 16),
                               ),
                               subtitle: Text(
                                 d.id,
-                                style: const TextStyle(color: Colors.white70),
+                                style: const TextStyle(color: Colors.white70, fontSize: 12),
                               ),
                             ),
                           ),
