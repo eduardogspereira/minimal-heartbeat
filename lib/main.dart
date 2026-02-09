@@ -1,31 +1,29 @@
-import 'dart:io';
 import 'dart:async';
-import 'dart:developer' as dev;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-final hrService = Uuid.parse('0000180d-0000-1000-8000-00805f9b34fb');
-final hrChar = Uuid.parse('00002a37-0000-1000-8000-00805f9b34fb');
+final heartRateService = Uuid.parse('0000180d-0000-1000-8000-00805f9b34fb');
+final heartRateCharacteristic = Uuid.parse('00002a37-0000-1000-8000-00805f9b34fb');
 
-void main() => runApp(const _App());
+void main() => runApp(const App());
 
-class _App extends StatefulWidget {
-  const _App();
+class App extends StatefulWidget {
+  const App({super.key});
 
   @override
-  State<_App> createState() => _S();
+  State<App> createState() => _S();
 }
 
-class _S extends State<_App> {
+class _S extends State<App> {
   final ble = FlutterReactiveBle();
+
   StreamSubscription<DiscoveredDevice>? scanSub;
   StreamSubscription<ConnectionStateUpdate>? connSub;
   StreamSubscription<List<int>>? hrSub;
 
-  String? id;
+  String? deviceId;
   int bpm = 0;
-  String status = 'tap';
 
   @override
   void dispose() {
@@ -41,26 +39,22 @@ class _S extends State<_App> {
     await Permission.locationWhenInUse.request();
 
     bpm = 0;
-    id = null;
-    status = 'scan';
+    deviceId = null;
     setState(() {});
 
     scanSub?.cancel();
-    scanSub = ble.scanForDevices(withServices: [hrService]).listen((d) {
-      if (id != null) return;
-      id = d.id;
+    scanSub = ble.scanForDevices(withServices: [heartRateService]).listen((d) {
+      if (deviceId != null) return;
+      deviceId = d.id;
       scanSub?.cancel();
-      status = 'conn';
       setState(() {});
 
       connSub?.cancel();
       connSub = ble.connectToDevice(id: d.id).listen((u) {
         if (u.connectionState == DeviceConnectionState.connected) {
-          status = 'ok';
-          setState(() {});
           final q = QualifiedCharacteristic(
-            characteristicId: hrChar,
-            serviceId: hrService,
+            characteristicId: heartRateCharacteristic,
+            serviceId: heartRateService,
             deviceId: d.id,
           );
 
@@ -74,17 +68,16 @@ class _S extends State<_App> {
           });
         }
         if (u.connectionState == DeviceConnectionState.disconnected) {
-          status = 'disc';
-          id = null;
+          deviceId = null;
+          bpm = 0;
           setState(() {});
         }
       });
     });
 
     Future.delayed(const Duration(seconds: 8), () {
-      if (id == null) {
+      if (deviceId == null) {
         scanSub?.cancel();
-        status = 'none';
         setState(() {});
       }
     });
