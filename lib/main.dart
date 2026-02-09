@@ -80,10 +80,25 @@ class _S extends State<App> {
                       return const Padding(
                         padding: EdgeInsets.symmetric(vertical: 16),
                         child: Center(
-                          child: SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(strokeWidth: 2),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                              SizedBox(width: 12),
+                              Text(
+                                'Scanning for devices...',
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       );
@@ -91,12 +106,31 @@ class _S extends State<App> {
 
                     final d = devices[i];
                     final name = d.name.trim();
+
                     return Center(
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 420),
-                        child: ListTile(
-                          title: Text(name, style: const TextStyle(color: Colors.white)),
-                          subtitle: Text(d.id, style: const TextStyle(color: Colors.white70)),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(12),
+                            onTap: () {
+                              debugPrint('OK: tapped ${d.name} (${d.id})');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('OK: ${d.name}')),
+                              );
+                            },
+                            child: ListTile(
+                              title: Text(
+                                name,
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              subtitle: Text(
+                                d.id,
+                                style: const TextStyle(color: Colors.white70),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     );
