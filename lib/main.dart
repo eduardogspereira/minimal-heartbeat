@@ -1,11 +1,12 @@
 import 'dart:io';
 import 'dart:async';
+import 'dart:developer' as dev;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-final hrService = Uuid.parse('b1999fa6-7006-4bbd-94bd-390d103a13e6');
-final hrChar = Uuid.parse('cb616e20-9ecc-490f-92ad-e08992dd688a');
+final hrService = Uuid.parse('0000180d-0000-1000-8000-00805f9b34fb');
+final hrChar = Uuid.parse('00002a37-0000-1000-8000-00805f9b34fb');
 
 void main() => runApp(const _App());
 
